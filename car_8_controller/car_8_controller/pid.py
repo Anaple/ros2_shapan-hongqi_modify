@@ -189,7 +189,7 @@ class PublisherNode(Node):
         # print("car_stop",car_stop)
         if car_stop == 1:
             pub.velocity = float(0)
-            pub.angle = float(190)
+            pub.angle = float(CARTUEN_DEAFULT)
         elif car_stop == 2:
             try:
                 pub.velocity = float(self.stop_car_speed_angle[0])

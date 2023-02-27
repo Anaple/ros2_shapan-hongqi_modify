@@ -14,9 +14,7 @@ def CARTUEN_MSG(tuen1,dir1,speet1)->str:
 #TTY串口路径
 TTY_MILLIMETER = "/dev/mt_millimeter"
 TTY_IMU = "/dev/mt_imu"
-TTY_THS1 ="/dev/ttyTHS1"
-TTY_RFID = "/dev/mt_rfid"
+TTY_THS1 ="/dev/ttyTHS0"
+TTY_RFID = "/dev/ttyTHS1"
 TTY_UWB = "/dev/mt_uwb"
 
-
-#TTY

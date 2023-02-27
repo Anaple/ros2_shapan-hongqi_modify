@@ -3,6 +3,7 @@
 @说明: 车道线识别发布节点
 """
 
+from car_config.config import CARTUEN_DEAFULT
 import cv2
 import numpy as np
 import rclpy
@@ -105,7 +106,7 @@ class PublisherNode(Node):
         self.img_pub.publish(ros_img)
         control = PidInterface()
         control.gear = 1
-        control.angle = float(190 - angle)
+        control.angle = float(CARTUEN_DEAFULT - angle)
         control.velocity = _velocity
         control.throttle_percentage = 100
         control.braking_percentage = 0
