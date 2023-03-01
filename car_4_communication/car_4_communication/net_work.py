@@ -44,6 +44,8 @@ from std_msgs.msg import String
 
 
 class Socker_client():
+    
+    
     def __init__(self, pub_net_station: Publisher, pub_net_cardecis: Publisher, pub_net_traffic: Publisher,
                  pub_pid: Publisher, pub_net_car_control: Publisher, pub_net_etc_state: Publisher):
         # self.screen_servr_ip = "10.1.1.198"
@@ -117,6 +119,7 @@ class Socker_client():
                             # print(time.time(),msg_msg)
                             type = msg_msg['type']
                             # print("type{}", format(type))
+                            
                             if type == "light":
                                 # 红绿灯
                                 light_list = msg_msg['light']
@@ -196,6 +199,7 @@ class Socker_client():
                                 start_msg.data = 1
                                 print(f"type=>start")
                                 self.pub_net_car_control.publish(start_msg)
+                                   
                     
 
                         except Exception as e:

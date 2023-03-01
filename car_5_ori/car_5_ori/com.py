@@ -6,11 +6,11 @@
 @说明: 小车底盘控制
 """
 
-from car_setting.car_setting import CARTUEN_DEAFULT,CARTUEN_MSG, TTY_THS1
 import rclpy
 from rclpy.node import Node
 from car_interfaces.msg import PidInterface
 from car_interfaces.msg import ComInterface
+from car_setting.car_setting import TTY_THS1,CARTUEN_MSG
 import serial
 import serial.tools.list_ports
 import threading
@@ -123,9 +123,7 @@ class PublisherNode(Node):
         speet1 = str(speet1) if 0<speet1 <=99 else "00"
         tuen1 = str(tuen1) if 0<tuen1 <=280 else "00"
         #logger.info("str speet1{}  tuen1  {}".format(speet1,tuen1))
-        # msg = "<" + str(dir1) + speet1 + ",100," + tuen1 + ",100,100,100>"
-        speet1 += CARTUEN_DEAFULT
-        msg = CARTUEN_MSG(tuen1=tuen1,dir1=dir1,speet1=speet1)
+        msg = CARTUEN_MSG(tuen1,dir1,speet1)
         self.get_logger().info("send msg  {}".format(msg))
         self.send_str(msg)
         self.old_speed = speet1
