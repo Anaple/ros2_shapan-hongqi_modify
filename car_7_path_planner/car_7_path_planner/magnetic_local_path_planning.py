@@ -13,7 +13,7 @@ import numpy as np
 import rclpy
 from car_interfaces.msg import SonicObstacleInterface
 from car_interfaces.msg import FusionInterface, CarDecisionInterface, NetLightInterface, NavigationalStateInterface, \
-    PidParameterInterface, NetEtcInterface
+    PidParameterInterface, NetEtcInterface,NetEtcControlInterface
 from car_interfaces.msg import MagneticInterface, MagneticLocalPathPlanningInterface, GlobalPathPlanningInterface
 from cv_bridge import CvBridge
 from rclpy.node import Node
