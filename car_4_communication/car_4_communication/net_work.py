@@ -6,6 +6,7 @@
 @说明: 网络节点
 """
 import threading
+from car_setting.car_setting import SOCKET_IP, SOCKET_PORT
 
 import rclpy
 from rcl_interfaces.msg import ParameterDescriptor
@@ -46,8 +47,8 @@ class Socker_client():
     def __init__(self, pub_net_station: Publisher, pub_net_cardecis: Publisher, pub_net_traffic: Publisher,
                  pub_pid: Publisher, pub_net_car_control: Publisher, pub_net_etc_state: Publisher):
         # self.screen_servr_ip = "10.1.1.198"
-        self.screen_servr_ip = "192.168.0.183"
-        self.screen_prot = 9000
+        self.screen_servr_ip = SOCKET_IP
+        self.screen_prot = SOCKET_PORT
         self.nav_end_dic = {1: 26.0, 2: 23.0, 3: 21.0, 4: 16.0, 5: 12.0, 6: 11.0, 7: 5.0, 8: 4.0}
         self.pub_net_station = pub_net_station
         self.pub_net_cardecis = pub_net_cardecis
@@ -195,6 +196,7 @@ class Socker_client():
                                 start_msg.data = 1
                                 print(f"type=>start")
                                 self.pub_net_car_control.publish(start_msg)
+                    
 
                         except Exception as e:
                             print(f"err data {data}")

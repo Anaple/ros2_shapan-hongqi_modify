@@ -1,4 +1,4 @@
-from car_config.config import TTY_RFID
+from car_setting.car_setting import TTY_RFID
 import rclpy
 import serial
 from rclpy.node import Node

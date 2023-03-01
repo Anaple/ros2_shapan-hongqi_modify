@@ -9,7 +9,7 @@
 @说明: milr雷达检测障碍物数据发布,更新毫米波协议
 """
 import threading
-from car_config.config import TTY_MILLIMETER
+from car_setting.car_setting import TTY_MILLIMETER
 
 import rclpy
 import time

@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 import serial
 import struct
-from car_config.config import TTY_IMU
+from car_setting.car_setting import TTY_IMU
 import rclpy
 import time
 import math

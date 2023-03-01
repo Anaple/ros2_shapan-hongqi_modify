@@ -5,7 +5,7 @@
 @作者: kmakise
 @说明: uwb 
 """
-from car_config.config import TTY_UWB
+from car_setting.car_setting import TTY_UWB
 import rclpy
 import transforms3d
 from rclpy.node import Node

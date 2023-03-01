@@ -6,7 +6,7 @@
 @说明: 小车底盘控制
 """
 
-from car_config.config import CARTUEN_DEAFULT,CARTUEN_MSG, TTY_THS1
+from car_setting.car_setting import CARTUEN_DEAFULT,CARTUEN_MSG, TTY_THS1
 import rclpy
 from rclpy.node import Node
 from car_interfaces.msg import PidInterface

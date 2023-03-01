@@ -3,7 +3,7 @@
 @说明: 车道线识别发布节点
 """
 
-from car_config.config import CARTUEN_DEAFULT
+from car_setting.car_setting import CARTUEN_DEAFULT
 import cv2
 import numpy as np
 import rclpy

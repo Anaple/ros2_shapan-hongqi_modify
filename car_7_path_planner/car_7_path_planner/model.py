@@ -2,6 +2,7 @@ import sqlite3
 from datetime import date
 import os
 import time
+from car_setting.car_setting import LOCAL_DB
 
 from peewee import Model, CharField, DateField, BooleanField, SmallIntegerField, SqliteDatabase, ForeignKeyField
 
@@ -10,7 +11,7 @@ from peewee import Model, CharField, DateField, BooleanField, SmallIntegerField,
 
 #数据库路径
 # db = SqliteDatabase('/home/nvidia/mt_ws/src/test1.db')
-db = SqliteDatabase('/home/noob/mt_ws/src/test1.db')
+db = SqliteDatabase(LOCAL_DB)
 
 
 class Node_data(Model):

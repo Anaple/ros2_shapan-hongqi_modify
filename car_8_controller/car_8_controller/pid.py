@@ -7,7 +7,7 @@
 """
 
 from turtle import pu
-from car_config.config import CARSPEED_DEAFULT, CARTUEN_DEAFULT
+from car_setting.car_setting import CARSPEED_DEAFULT, CARTUEN_DEAFULT
 import rclpy        
 import time                           
 from rclpy.node import Node                     
@@ -163,10 +163,7 @@ class PublisherNode(Node):
         #     turn_angle = 0
 
 
-
-
         #turn_angle = angle - imu_angle
-
 
         #控制左传是大于50 右转是小于50
         # print("b_ {}".format(turn_angle))
