@@ -11,10 +11,10 @@ def generate_launch_description():
     run_nodes.append(Node(package='car_8_controller',executable='pid'))
     run_nodes.append(Node(package='car_6_fusion',executable='fusion'))
     run_nodes.append(Node(package='car_4_communication',executable='net_work'))
+    run_nodes.append(Node(package='car_3_determine_location',executable='rfid'))
 
     node1 = Node(package='car_5_ori',executable='com')
     node2 = Node(package='car_3_determine_location',executable='magnetic')
-    node3 = Node(package='car_3_determine_location',executable='rfid')
     # node4 = Node(package='car_3_determine_location',executable='imu')
     # node5 = Node(package='car_2_sonic_obstacle',executable='sonic_obstacle')
     node6 = Node(package='car_5_ori',executable='car_ori')
