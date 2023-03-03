@@ -7,7 +7,7 @@
 """
 
 from turtle import pu
-from car_setting.car_setting import CARSPEED_DEAFULT, CARTUEN_DEAFULT
+from car_setting.car_setting import CARSPEED_DEAFULT, CARTUEN_DEAFULT ,CARSPEED_STOP,CARGEAR_R ,CARGEAR_N
 import rclpy        
 import time                           
 from rclpy.node import Node                     
@@ -181,14 +181,16 @@ class PublisherNode(Node):
         """
         pub = PidInterface()
         pub.timestamp = time.time()
-        pub.gear = int(1)
+        pub.gear = int(CARGEAR_N)
         car_stop = data.running_state
         # print("car_stop",car_stop)
         if car_stop == 1:
-            pub.velocity = float(0)
+            pub.gear = int(CARGEAR_R)
+            pub.velocity = float(CARSPEED_STOP)
             pub.angle = float(CARTUEN_DEAFULT)
         elif car_stop == 2:
             try:
+                pub.gear = int(CARGEAR_R)
                 pub.velocity = float(self.stop_car_speed_angle[0])
                 pub.angle = float(self.stop_car_speed_angle[1])
             except Exception as e:
@@ -231,14 +233,15 @@ class PublisherNode(Node):
         """
         pub = PidInterface()
         pub.timestamp = time.time()
-        pub.gear = int(1)
+        pub.gear = int(CARGEAR_N)
         car_stop = data.running_state
         if car_stop == 1:
-            pub.velocity = float(0)
-            pub.angle = float(50)
+            pub.gear = int(CARGEAR_R)
+            pub.velocity = float(CARSPEED_STOP)
+            pub.angle = float(CARTUEN_DEAFULT)
         elif car_stop == 2:
             try:
-
+                pub.gear = int(CARGEAR_R)
                 pub.velocity = float(self.stop_car_speed_angle[0])
                 pub.angle = float(self.stop_car_speed_angle[1])
             except Exception as e:

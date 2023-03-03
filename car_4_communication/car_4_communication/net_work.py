@@ -44,10 +44,8 @@ from std_msgs.msg import String
 
 
 class Socker_client():
-    
-    
     def __init__(self, pub_net_station: Publisher, pub_net_cardecis: Publisher, pub_net_traffic: Publisher,
-                 pub_pid: Publisher, pub_net_car_control: Publisher, pub_net_etc_state: Publisher):
+                 pub_pid: Publisher, pub_net_car_control: Publisher, pub_net_etc_state: Publisher,get_loggeer):
         # self.screen_servr_ip = "10.1.1.198"
         self.screen_servr_ip = SOCKET_IP
         self.screen_prot = SOCKET_PORT
@@ -59,27 +57,47 @@ class Socker_client():
         self.pub_net_car_control = pub_net_car_control
         self.pub_net_etc_state = pub_net_etc_state
         self.server_is_debug = None
+        self.get_logger = get_loggeer
         self.Socket_Server_init(self.screen_servr_ip, self.screen_prot)
+
+
+        self.netFunMap = {
+                                "light":self.funLight,
+                                "mode_control":self.funModeControl,
+                                "nav_end":self.funNavEnd,
+                                "etc_control":self.funEtcControl,
+                                "PID":self.funPID,
+                                "node_control":self.funNodeControl
+
+                            }
+
+
+       
 
     def Socket_Server_init(self, host='192.168.0.182', port=61000):
         self.socker_c = socket.socket()  # 创建 socket 对象
-        self.socker_c.connect((host, port))
-        print("socker 已连接")
+        while(True):
+            try:
+                self.socker_c.connect((host, port))
+                break
+            except:
+                self.get_logger.error("等待连接")
+        self.get_logger.info("socker 已连接")
         # self.server_is_debug=True
         data = self.socker_c.recv(4)
-        print(f"连接服务器4data :{data}")
+        self.get_logger.info(f"连接服务器4data :{data}")
         try:
             if data[0] == 255 and data[1] == 170:
                 data_len = struct.unpack(">h", data[2:4])[0]
                 data = self.socker_c.recv(data_len)
                 a = json.loads(data)
-                print("socker qt软件 ==>> 已连接")
+                self.get_logger.info("socker qt软件 ==>> 已连接")
                 self.server_is_debug = True
                 threading_1 = threading.Thread(target=self.Func_Recv_debug, args=())
                 threading_1.setDaemon(True)
                 threading_1.start()
             else:
-                print("socker 大屏软件 ==>> 已连接")
+                self.get_logger.info("socker 大屏软件 ==>> 已连接")
                 data = self.socker_c.recv(1024)
                 self.server_is_debug = False
                 threading_2 = threading.Thread(target=self.Func_Recv_, args=())
@@ -94,7 +112,7 @@ class Socker_client():
         接收车辆消息
         :return:
         """
-        netLightInterface = NetLightInterface()
+        
         try:
             while self.socker_c:
                 data = self.socker_c.recv(1)
@@ -119,99 +137,106 @@ class Socker_client():
                             # print(time.time(),msg_msg)
                             type = msg_msg['type']
                             # print("type{}", format(type))
-                            
-                            if type == "light":
-                                # 红绿灯
-                                light_list = msg_msg['light']
-                                lightdata_list = []
-                                lighttimedata_list = []
-                                for i in light_list.values():
-                                    lightdata_list.append(float(i['status']))
-                                    lighttimedata_list.append(float(i['time']))
-                                netLightInterface.number = len(light_list)
-                                netLightInterface.lightdata = lightdata_list
-                                netLightInterface.lighttimedata = lighttimedata_list
-                                self.pub_net_traffic.publish(netLightInterface)
 
-                            elif type == "mode_control":
-
-                                mode_control = msg_msg['mode_control']
-                                positioning = mode_control['positioning']  # 0巡磁/1动捕
-                                Obstacle = mode_control['Obstacle']  # [0换道/1局部避障]
-                                print("type==>mode_control  positioning{} Obstacle{}".format(positioning, Obstacle))
-                                cardecisionInterface = CarDecisionInterface()
-                                cardecisionInterface.driving_state = positioning
-                                cardecisionInterface.come_across_obstacle_state = Obstacle
-                                self.pub_net_cardecis.publish(cardecisionInterface)
-
-
-
-                            elif type == "nav_end":
-                                nav_end = msg_msg['nav_end']
-                                plan_node = nav_end['plan_node']
-                                print(f"type=>nav_end plan_node {plan_node}")
-                                netStationInterface = NetStationInterface()
-                                netStationInterface.startpoint = [0.0]
-                                netStationInterface.endpoint = [float(plan_node)]
-                                self.pub_net_station.publish(netStationInterface)
-
-                            elif type == "etc_control":
-                                etc_controls = msg_msg['etc_control']
-                                # print(f"etc_controls =  {etc_controls}")
-                                netetcinterface_msg = NetEtcInterface()
-                                etc_list = []
-                                num = 0
-                                for etc_control in etc_controls.values():
-                                    status = etc_control['status']
-                                    etc_list.append(False if status else True)
-                                    num += 1
-                                netetcinterface_msg.status_list = etc_list
-                                netetcinterface_msg.number = num
-                                # print(f"netetcinterface_msg {netetcinterface_msg}")
-                                self.pub_net_etc_state.publish(netetcinterface_msg)
-
-                            elif type == "PID":
-                                PID = msg_msg['PID']
-                                P = PID['P']
-                                I = PID['I']
-                                D = PID['D']
-                                pidParameterInterface = PidParameterInterface()
-                                print(f"type=>PID {P} {I} {D}")
-                                pidParameterInterface.p = float(P)
-                                pidParameterInterface.i = float(I)
-                                pidParameterInterface.d = float(D)
-                                self.pub_pid.publish(pidParameterInterface)
-
-                            elif type == "node_control":
-                                node_control = msg_msg["node_control"]
-                                camera = node_control['camera']
-                                line = node_control['line']
-                                print(f"type=>node_control camera {camera} line{line}")
-
-                            elif type == "stop":
+                            fun  = self.netFunMap.get(type)
+                            fun(message= msg_msg)
+                           
+                            if type == "stop":
                                 stop_msg = Int8()
                                 stop_msg.data = 0
                                 print(f"type=>stop")
                                 self.pub_net_car_control.publish(stop_msg)
 
-                            elif type == "start":
+                            if type == "start":
                                 start_msg = Int8()
                                 start_msg.data = 1
                                 print(f"type=>start")
                                 self.pub_net_car_control.publish(start_msg)
-                                   
                     
 
                         except Exception as e:
                             print(f"err data {data}")
-
-
-
                 else:
                     # print("type err", data)
                     pass
         except Exception as e:
             print("断开连接 {}".format(e))
+
+    #红绿灯
+    def funLight(self,message):
+        netLightInterface = NetLightInterface()
+         # 红绿灯
+        light_list = message['light']
+        lightdata_list = []
+        lighttimedata_list = []
+        for i in light_list.values():
+            lightdata_list.append(float(i['status']))
+            lighttimedata_list.append(float(i['time']))
+        netLightInterface.number = len(light_list)
+        netLightInterface.lightdata = lightdata_list
+        netLightInterface.lighttimedata = lighttimedata_list
+        self.pub_net_traffic.publish(netLightInterface)
+
+
+    def funModeControl(self,message):
+
+        mode_control = message['mode_control']
+        positioning = mode_control['positioning']  # 0巡磁/1动捕
+        Obstacle = mode_control['Obstacle']  # [0换道/1局部避障]
+        print("type==>mode_control  positioning{} Obstacle{}".format(positioning, Obstacle))
+        cardecisionInterface = CarDecisionInterface()
+        cardecisionInterface.driving_state = positioning
+        cardecisionInterface.come_across_obstacle_state = Obstacle
+        self.pub_net_cardecis.publish(cardecisionInterface)
+
+
+    def funNavEnd(self,message):
+        nav_end = message['nav_end']
+        plan_node = nav_end['plan_node']
+        print(f"type=>nav_end plan_node {plan_node}")
+        netStationInterface = NetStationInterface()
+        netStationInterface.startpoint = [0.0]
+        netStationInterface.endpoint = [float(plan_node)]
+        self.pub_net_station.publish(netStationInterface)
+
+
+    def funEtcControl(self,message):
+        etc_controls = message['etc_control']
+        # print(f"etc_controls =  {etc_controls}")
+        netetcinterface_msg = NetEtcInterface()
+        etc_list = []
+        num = 0
+        for etc_control in etc_controls.values():
+            status = etc_control['status']
+            etc_list.append(False if status else True)
+            num += 1
+        netetcinterface_msg.status_list = etc_list
+        netetcinterface_msg.number = num
+        # print(f"netetcinterface_msg {netetcinterface_msg}")
+        self.pub_net_etc_state.publish(netetcinterface_msg)
+
+
+    #PID
+    def funPID(self,message):
+        PID = message['PID']
+        P = PID['P']
+        I = PID['I']
+        D = PID['D']
+        pidParameterInterface = PidParameterInterface()
+        print(f"type=>PID {P} {I} {D}")
+        pidParameterInterface.p = float(P)
+        pidParameterInterface.i = float(I)
+        pidParameterInterface.d = float(D)
+        self.pub_pid.publish(pidParameterInterface)
+
+
+    def funNodeControl(self,message):
+        node_control = message["node_control"]
+        camera = node_control['camera']
+        line = node_control['line']
+        print(f"type=>node_control camera {camera} line{line}")
+
+
 
     def Func_Recv_(self):
         """
@@ -536,6 +561,8 @@ class PublisherNode(Node):
         # pid
         self.pub_pid = self.create_publisher(PidParameterInterface, "net_pid_data", 10)
 
+        
+
         #sub
         self.sub_fake = self.create_subscription(String, 'fake_people_control', self.listener_callback_fake_people_control, 1)
         self.sub_fus = self.create_subscription(FusionInterface, 'fusion_data', self.listener_callback_fsd, 1)
@@ -545,7 +572,7 @@ class PublisherNode(Node):
         self.sub_etc_control_msg = self.create_subscription(NetEtcControlInterface, 'etc_control',
                                                             self.listener_callback_etc_control, 10)
         self.socker_client = Socker_client(self.pub_net_station, self.pub_net_cardecis, self.pub_net_traffic,
-                                           self.pub_pid, self.pub_net_car_control, self.pub_net_etc_state)
+                                           self.pub_pid, self.pub_net_car_control, self.pub_net_etc_state,self.get_logger)
 
 
 

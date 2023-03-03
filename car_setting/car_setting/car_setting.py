@@ -1,12 +1,22 @@
 #舵机角度
 CARTUEN_DEAFULT = 190
 #速度
-CARSPEED_DEAFULT = 99
+CARSPEED_DEAFULT = 10
+
+CARSPEED_STOP = 90
+
+
+#电机方向 红旗车 2 前行 1 后退
+CARGEAR_N = 2
+CARGEAR_R = 1
+
+
 
 
 #电机消息
-
+#speed 190不动 190<speed <260 R   120<speed<190 N 
 def CARTUEN_MSG(tuen1,dir1,speet1)->str:
+
 
     return f"<100,100,{tuen1},{dir1}{speet1},100,100>"
 
@@ -14,7 +24,7 @@ def CARTUEN_MSG(tuen1,dir1,speet1)->str:
 #TTY串口路径
 TTY_MILLIMETER = "/dev/mt_millimeter"
 TTY_IMU = "/dev/mt_imu"
-TTY_THS1 ="/dev/ttyTCU0"
+TTY_THS1 ="/dev/ttyTHS0"
 TTY_RFID = "/dev/ttyTHS1"
 TTY_UWB = "/dev/mt_uwb"
 
