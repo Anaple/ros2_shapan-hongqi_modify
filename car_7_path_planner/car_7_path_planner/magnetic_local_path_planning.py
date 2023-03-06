@@ -275,7 +275,7 @@ class Local_nav():
         #self.come_across_obstacle_state = 1
         self.obstacle_flag = False
         nav_msg_list = self.list_of_groups(self.routedata, 7)
-        print("nav_msg_list{} startint {} endpoint {}".format(nav_msg_list,self.startpoint[0], self.endpoint[0]))
+        ("nav_msg_list{} startint {} endpoint {}".format(nav_msg_list,self.startpoint[0], self.endpoint[0]))
         print("开始局部导航")
         self.navigationalStateInterface.start = int(self.startpoint[0])
         self.navigationalStateInterface.end = int(self.endpoint[0])
@@ -315,7 +315,10 @@ class Local_nav():
                 if ma_num == 1:
                     self.magnetic_turn = 16 - magnetic_r_list[0]
                 elif ma_num == 2:
-                    self.magnetic_turn = 16 - magnetic_r_list[1]
+                    if abs(16 - magnetic_r_list[0]) < abs(16 - magnetic_r_list[1]):
+                        self.magnetic_turn = 16 - magnetic_r_list[0]
+                    else:
+                        self.magnetic_turn = 16 - magnetic_r_list[1]
                 elif ma_num == 3:
                     self.magnetic_turn = 16 - magnetic_r_list[1]
 

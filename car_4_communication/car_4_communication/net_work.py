@@ -81,7 +81,7 @@ class Socker_client():
                 self.socker_c.connect((host, port))
                 break
             except:
-                self.get_logger.error("等待连接")
+                print("等待连接")
         self.get_logger.info("socker 已连接")
         # self.server_is_debug=True
         data = self.socker_c.recv(4)
@@ -91,13 +91,13 @@ class Socker_client():
                 data_len = struct.unpack(">h", data[2:4])[0]
                 data = self.socker_c.recv(data_len)
                 a = json.loads(data)
-                self.get_logger.info("socker qt软件 ==>> 已连接")
+                print("socker qt软件 ==>> 已连接")
                 self.server_is_debug = True
                 threading_1 = threading.Thread(target=self.Func_Recv_debug, args=())
                 threading_1.setDaemon(True)
                 threading_1.start()
             else:
-                self.get_logger.info("socker 大屏软件 ==>> 已连接")
+                print("socker 大屏软件 ==>> 已连接")
                 data = self.socker_c.recv(1024)
                 self.server_is_debug = False
                 threading_2 = threading.Thread(target=self.Func_Recv_, args=())

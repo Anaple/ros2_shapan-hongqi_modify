@@ -33,6 +33,9 @@ TTY_UWB = "/dev/mt_uwb"
 SOCKET_IP = '192.168.0.31'
 SOCKET_PORT = 9000
 
+
+
+
 #DB路径
 LOCAL_DB = "/home/nvidia/ro2_honqi/src/test1.db"
 
