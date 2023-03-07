@@ -168,9 +168,11 @@ class PublisherNode(Node):
 
     def listener_callback_rfid(self,data):
         self.local_rfid = int(data.data)
+
         self.get_logger().info(f"rfid={self.local_rfid},起点更新：{self.navigation.local_rfid}")
+        
         self.navigation.local_rfid = self.local_rfid
-        self.navigation = Navigation(self.local_rfid,self.pub)
+        
 
 
 

@@ -57,7 +57,7 @@ class Socker_client():
         self.pub_net_car_control = pub_net_car_control
         self.pub_net_etc_state = pub_net_etc_state
         self.server_is_debug = None
-        self.get_logger = get_loggeer
+        self.get_logger = get_loggeer()
         self.Socket_Server_init(self.screen_servr_ip, self.screen_prot)
 
 
@@ -81,7 +81,7 @@ class Socker_client():
                 self.socker_c.connect((host, port))
                 break
             except:
-                print("等待连接")
+                self.get_logger.info("等待连接")
         self.get_logger.info("socker 已连接")
         # self.server_is_debug=True
         data = self.socker_c.recv(4)
