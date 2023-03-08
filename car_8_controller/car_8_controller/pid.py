@@ -7,7 +7,7 @@
 """
 
 from turtle import pu
-from car_setting.car_setting import CARSPEED_DEAFULT, CARTUEN_DEAFULT ,CARSPEED_STOP,CARGEAR_R ,CARGEAR_N
+from car_setting.car_setting import CARSPEED_DEAFULT, CARTUEN_DEAFULT ,CARSPEED_STOP,CARGEAR_R ,CARGEAR_N,CARTUEN_ANGLE,CARTUEN_ANGLE_CENTEROFFSET
 import rclpy        
 import time                           
 from rclpy.node import Node                     
@@ -199,7 +199,7 @@ class PublisherNode(Node):
         else:
             centeroffset = data.centeroffset
             # centeroffset = centeroffset*5.5
-            datain = {"x": 98, "w": centeroffset*2.8125}
+            datain = {"x": 98, "w": centeroffset*CARTUEN_ANGLE_CENTEROFFSET}
 
             """
             self.pos = {
@@ -221,7 +221,7 @@ class PublisherNode(Node):
             #修改速度
             pub.velocity = float(CARSPEED_DEAFULT)
             #修改舵机方向
-            pub.angle = float(CARTUEN_DEAFULT+angle)
+            pub.angle = float(CARTUEN_DEAFULT+(angle*CARTUEN_ANGLE))
         # print("pub {}".format(pub))
         self.pub.publish(pub)
 

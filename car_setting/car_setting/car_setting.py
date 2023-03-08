@@ -10,6 +10,14 @@ CARSPEED_STOP = 90
 CARGEAR_N = 2
 CARGEAR_R = 1
 
+#舵机偏转方向
+# 默认1  若方向相反 特殊处理 -1
+CARTUEN_ANGLE = -1
+
+#舵机偏转值
+#转弯角度
+CARTUEN_ANGLE_CENTEROFFSET = 2.8125
+
 
 
 
